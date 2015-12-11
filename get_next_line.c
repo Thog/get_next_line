@@ -12,37 +12,28 @@
 
 #include "get_next_line.h"
 
-int				ft_strrealloc(char *prev, size_t new_size)
-{
-	char	*result;
-
-	if (!(result = ft_strnew(new_size)))
-		return (0);
-	ft_strncpy(result, prev, ft_strlen(prev));
-	free(prev);
-	prev = result;
-	return (1);
-}
-
 int				get_next_line(int const fd, char **line)
 {
-	static char			*buffer = NULL;
-	static int			prev_pos = 0;
-	char				*tmp;
-	int					i;
+	static char		*cache;
+	char			buffer[BUFF_SIZE + 1];
+	int				ret;
 
-	i = 0;
-	if ((!buffer && !(buffer = ft_strnew(BUFF_SIZE))) ||
-			(prev_pos && !(ft_strrealloc(buffer, BUFF_SIZE + prev_pos))))
+	ret = 1;
+	if (!line || BUFF_SIZE <= 0)
 		return (-1);
-	while ((i = read(fd, (buffer + prev_pos), BUFF_SIZE) > 0))
+	if (!cache)
+		cache = ft_strnew(0);
+	while (!ft_strchr(cache, '\n') && (ret = read(fd, buffer, BUFF_SIZE)))
 	{
-		if ((tmp = ft_strchr(buffer, '\n')) || (tmp = ft_strchr(buffer, -1)))
-		{
-			*line = ft_strncpy(*line, buffer, (tmp - buffer));
-			prev_pos = (i < BUFF_SIZE) ? i : 0;
-			return (1);
-		}
+		if (ret == -1)
+			return (-1);
+		*(buffer + ret) = '\0';
+		cache = ft_strjoin(cache, buffer);
 	}
-	return (0);
+	if (ft_strchr(cache, '\n') || ((*line = ft_strdup(cache)) && 0))
+			*line = ft_strsub(cache, 0, ft_strchr(cache, '\n') - cache + 1);
+	if (ret)
+		*(*(line) + ft_strlen(*line) - 1) = '\0';
+	cache = ft_strsub(cache, ft_strchr(cache, '\n') - cache + 1, ft_strlen(ft_strchr(cache, '\n')));
+	return (ret > 0 ? 1 : 0);
 }
