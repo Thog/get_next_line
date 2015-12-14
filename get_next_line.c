@@ -6,7 +6,7 @@
 /*   By: tguillem <tguillem@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/11 14:02:41 by tguillem          #+#    #+#             */
-/*   Updated: 2015/12/11 16:23:12 by tguillem         ###   ########.fr       */
+/*   Updated: 2015/12/14 08:07:18 by tguillem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,10 @@ int				get_next_line(int const fd, char **line)
 		cache = ft_strjoin(cache, buffer);
 	}
 	if (ft_strchr(cache, '\n') || ((*line = ft_strdup(cache)) && 0))
-			*line = ft_strsub(cache, 0, ft_strchr(cache, '\n') - cache + 1);
+		*line = ft_strsub(cache, 0, ft_strchr(cache, '\n') - cache + 1);
 	if (ret)
 		*(*(line) + ft_strlen(*line) - 1) = '\0';
-	cache = ft_strsub(cache, ft_strchr(cache, '\n') - cache + 1, ft_strlen(ft_strchr(cache, '\n')));
+	cache = ft_strsub(cache, ft_strchr(cache, '\n') - cache + 1, ft_strlen(
+				ft_strchr(cache, '\n')));
 	return (ret > 0 ? 1 : 0);
 }
