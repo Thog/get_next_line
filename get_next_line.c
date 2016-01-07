@@ -6,7 +6,7 @@
 /*   By: tguillem <tguillem@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/11 14:02:41 by tguillem          #+#    #+#             */
-/*   Updated: 2015/12/14 08:07:18 by tguillem         ###   ########.fr       */
+/*   Updated: 2016/01/07 16:48:18 by tguillem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ static t_buff	*init_buff(t_buff *before, int fd)
 {
 	t_buff		*result;
 
-	if (!(result = (t_buff*)malloc(sizeof(t_buff))))
+	if (!(result = (t_buff*)malloc(sizeof(t_buff))) ||
+			!(result->buff = ft_strnew(0)))
 		return (NULL);
 	result->fd = fd;
-	result->buff = ft_strnew(0);
 	result->next = NULL;
 	if (before)
 		before->next = result;
@@ -50,6 +50,15 @@ static t_buff	*get_buff(t_buff **base, int fd)
 	return (NULL);
 }
 
+static char		*joinstr(char *str, char *buffer)
+{
+	char		*result;
+
+	result = ft_strjoin(str, buffer);
+	free(str);
+	return (result);
+}
+
 int				get_next_line(int const fd, char **line)
 {
 	static t_buff	*root;
@@ -65,7 +74,7 @@ int				get_next_line(int const fd, char **line)
 		if (ret == -1)
 			return (-1);
 		*(buffer + ret) = '\0';
-		c->buff = ft_strjoin(c->buff, buffer);
+		c->buff = joinstr(c->buff, buffer);
 	}
 	if (ft_strchr(c->buff, '\n') || ((*line = ft_strdup(c->buff)) && 0))
 		*line = ft_strsub(c->buff, 0, ft_strchr(c->buff, '\n') - c->buff + 1);
