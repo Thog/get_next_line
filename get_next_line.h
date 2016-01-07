@@ -12,12 +12,19 @@
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# define BUFF_SIZE 32
+# define BUFF_SIZE 10000000
 # include "libft/libft.h"
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
 
-int		get_next_line(int const fd, char **line);
+int					get_next_line(int const fd, char **line);
+
+typedef struct		s_buff
+{
+	int				fd;
+	char			*buff;
+	struct s_buff	*next;
+}					t_buff;
 
 #endif

@@ -12,29 +12,66 @@
 
 #include "get_next_line.h"
 
+static t_buff	*init_buff(t_buff *before, int fd)
+{
+	t_buff		*result;
+
+	if (!(result = (t_buff*)malloc(sizeof(t_buff))))
+		return (NULL);
+	result->fd = fd;
+	result->buff = ft_strnew(0);
+	result->next = NULL;
+	if (before)
+		before->next = result;
+	return (result);
+}
+
+static t_buff	*get_buff(t_buff **base, int fd)
+{
+	t_buff		*tmp;
+
+	tmp = *base;
+	if (!*base)
+	{
+		*base = init_buff(NULL, fd);
+		return (*base);
+	}
+	else
+	{
+		while (tmp)
+		{
+			if (tmp->fd == fd)
+				return (tmp);
+			if (!tmp->next)
+				return (init_buff(tmp, fd));
+			tmp = tmp->next;
+		}
+	}
+	return (NULL);
+}
+
 int				get_next_line(int const fd, char **line)
 {
-	static char		*cache;
+	static t_buff	*root;
+	t_buff			*c;
 	char			buffer[BUFF_SIZE + 1];
 	int				ret;
 
 	ret = 1;
-	if (!line || BUFF_SIZE <= 0)
+	if (!line || BUFF_SIZE <= 0 || !(c = get_buff(&root, fd)))
 		return (-1);
-	if (!cache)
-		cache = ft_strnew(0);
-	while (!ft_strchr(cache, '\n') && (ret = read(fd, buffer, BUFF_SIZE)))
+	while (!ft_strchr(c->buff, '\n') && (ret = read(fd, buffer, BUFF_SIZE)))
 	{
 		if (ret == -1)
 			return (-1);
 		*(buffer + ret) = '\0';
-		cache = ft_strjoin(cache, buffer);
+		c->buff = ft_strjoin(c->buff, buffer);
 	}
-	if (ft_strchr(cache, '\n') || ((*line = ft_strdup(cache)) && 0))
-		*line = ft_strsub(cache, 0, ft_strchr(cache, '\n') - cache + 1);
+	if (ft_strchr(c->buff, '\n') || ((*line = ft_strdup(c->buff)) && 0))
+		*line = ft_strsub(c->buff, 0, ft_strchr(c->buff, '\n') - c->buff + 1);
 	if (ret)
 		*(*(line) + ft_strlen(*line) - 1) = '\0';
-	cache = ft_strsub(cache, ft_strchr(cache, '\n') - cache + 1, ft_strlen(
-				ft_strchr(cache, '\n')));
+	c->buff = ft_strsub(c->buff, ft_strchr(c->buff, '\n')
+			- c->buff + 1, ft_strlen(ft_strchr(c->buff, '\n')));
 	return (ret > 0 ? 1 : 0);
 }
