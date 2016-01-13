@@ -6,7 +6,7 @@
 /*   By: tguillem <tguillem@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/11 14:02:41 by tguillem          #+#    #+#             */
-/*   Updated: 2016/01/07 16:48:18 by tguillem         ###   ########.fr       */
+/*   Updated: 2016/01/13 10:26:38 by tguillem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,5 @@ int				get_next_line(int const fd, char **line)
 		*(*(line) + ft_strlen(*line) - 1) = '\0';
 	c->buff = ft_strsub(c->buff, ft_strchr(c->buff, '\n')
 			- c->buff + 1, ft_strlen(ft_strchr(c->buff, '\n')));
-	return (ret > 0 ? 1 : 0);
+	return (ret > 0 ? 1 : ft_strlen(*line) != 0);
 }
