@@ -6,13 +6,13 @@
 /*   By: tguillem <tguillem@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/11 14:11:37 by tguillem          #+#    #+#             */
-/*   Updated: 2016/01/07 11:36:02 by tguillem         ###   ########.fr       */
+/*   Updated: 2016/01/29 08:50:55 by tguillem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# define BUFF_SIZE 11000
+# define BUFF_SIZE 4096
 # include "libft/libft.h"
 # include <stdlib.h>
 # include <unistd.h>

@@ -6,7 +6,7 @@
 /*   By: tguillem <tguillem@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/12/11 14:02:41 by tguillem          #+#    #+#             */
-/*   Updated: 2016/01/13 10:26:38 by tguillem         ###   ########.fr       */
+/*   Updated: 2016/01/29 08:45:46 by tguillem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,18 @@ static char		*joinstr(char *str, char *buffer)
 	char		*result;
 
 	result = ft_strjoin(str, buffer);
-	free(str);
+	if (str)
+		free(str);
+	return (result);
+}
+
+static char		*substr(char *str, int start, int end)
+{
+	char		*result;
+
+	result = ft_strsub(str, start, end);
+	if (str)
+		free(str);
 	return (result);
 }
 
@@ -80,7 +91,7 @@ int				get_next_line(int const fd, char **line)
 		*line = ft_strsub(c->buff, 0, ft_strchr(c->buff, '\n') - c->buff + 1);
 	if (ret)
 		*(*(line) + ft_strlen(*line) - 1) = '\0';
-	c->buff = ft_strsub(c->buff, ft_strchr(c->buff, '\n')
+	c->buff = substr(c->buff, ft_strchr(c->buff, '\n')
 			- c->buff + 1, ft_strlen(ft_strchr(c->buff, '\n')));
 	return (ret > 0 ? 1 : ft_strlen(*line) != 0);
 }
